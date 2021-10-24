@@ -40,8 +40,13 @@ test_bit_ops.c: bit_ops.h
 .c.o:
 	$(CC) -c $(CFLAGS) $<
 
+$(VECTOR_PROG): $(VECTOR_OBJS)
+	$(CC) $(CFLAGS) -g -o $(VECTOR_PROG) $(VECTOR_OBJS) $(LDFLAGS)
+
 vector-memcheck: $(VECTOR_PROG)
 	$(MEMCHECK) ./$(VECTOR_PROG)
+
+
 
 clean:
 	-rm -rf core *.o *~ "#"*"#" Makefile.bak $(BINARIES) *.dSYM
