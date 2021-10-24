@@ -1,7 +1,7 @@
-1.
-2.
-3.
-4.
-5.
-6.
-7.
+1. clean target deletes all the compiled programs.
+2. all
+3. gcc
+4. c99
+5. $(FOO)
+6. Mac OS
+7. In line 19, Makefiles creates lfsr program from its object files.
