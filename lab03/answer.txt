@@ -1,0 +1,32 @@
+Exercise 1:
+1:
+.data: subsequent items put in user data segment(binary representation of data in source file).
+.text: subsequent items put in user text segment(machine code).
+.word: store the 32bit quantities in successive memory words.
+
+2:
+34
+the ninth fib number.
+
+3:
+65536 + 8 = 65544
+
+4:
+set register t3 to 13
+
+
+Exercise 2:
+1:
+t0
+2:
+s0
+3:
+source: s1
+dest: s2
+4:
+assembly code under loop label
+5:
+pointer is a value in the register
+
+
+
