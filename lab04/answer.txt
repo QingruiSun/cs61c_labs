@@ -1,0 +1,6 @@
+Exercise1:
+1: the address of array should load from memory.
+2: the size of int is 4 bytes, so the register t0 should increment 4 every step.
+3: s1 store the address of function, not the memory address store the address of function.
+4: should store temporary registers before call functions.
+5: use lw rather than la.
