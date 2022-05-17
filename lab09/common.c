@@ -70,7 +70,9 @@ long long int sum_simd(unsigned int vals[NUM_ELEMS]) {
 		}
 		/* You'll need a tail case. */
 		for (; i < NUM_ELEMS; ++i) {
-		  result += vals[i];
+		  if (vals[i] >= 128) {
+		    result += vals[i];
+		  }
 		}
 	}
 	clock_t end = clock();
@@ -85,9 +87,40 @@ long long int sum_simd_unrolled(unsigned int vals[NUM_ELEMS]) {
 	for(unsigned int w = 0; w < OUTER_ITERATIONS; w++) {
 		/* COPY AND PASTE YOUR sum_simd() HERE */
 		/* MODIFY IT BY UNROLLING IT */
+		__m128i tmp_sum = _mm_setzero_si128();
+                unsigned int results[4];
+                int i = 0;
+                for (; i + 16 <= NUM_ELEMS; i += 16) {
+                  __m128i tmp1 = _mm_loadu_si128((__m128i*) (vals + i));
+                  __m128i mask1 = _mm_cmpgt_epi32(tmp1, _127);
+                  tmp1 = _mm_and_si128(mask1, tmp1);
+		  __m128i tmp2 = _mm_loadu_si128((__m128i*) (vals + i + 4));
+                  __m128i mask2 = _mm_cmpgt_epi32(tmp2, _127);
+                  tmp2 = _mm_and_si128(mask2, tmp2);
+                  __m128i tmp3 = _mm_loadu_si128((__m128i*) (vals + i + 8));
+                  __m128i mask3 = _mm_cmpgt_epi32(tmp3, _127);
+                  tmp3 = _mm_and_si128(mask3, tmp3);
+                  __m128i tmp4 = _mm_loadu_si128((__m128i*) (vals + i + 12));
+                  __m128i mask4 = _mm_cmpgt_epi32(tmp4, _127);
+                  tmp4 = _mm_and_si128(mask4, tmp4);
+                  tmp_sum = _mm_add_epi32(tmp_sum, tmp1);
+		  tmp_sum = _mm_add_epi32(tmp_sum, tmp2);
+		  tmp_sum = _mm_add_epi32(tmp_sum, tmp3);
+		  tmp_sum = _mm_add_epi32(tmp_sum, tmp4);
+                }
+                _mm_storeu_si128((__m128i*)results, tmp_sum);
+
+                int j = 0;
+                for (; j < 4; ++j) {
+                  result += results[j];
+                }
 
 		/* You'll need 1 or maybe 2 tail cases here. */
-
+		for (; i < NUM_ELEMS; ++i) {
+		  if (vals[i] >= 128) {
+		    result += vals[i];
+		  }
+		}
 	}
 	clock_t end = clock();
 	printf("Time taken: %Lf s\n", (long double)(end - start) / CLOCKS_PER_SEC);
