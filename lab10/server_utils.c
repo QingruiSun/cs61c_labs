@@ -252,7 +252,7 @@ void serve_forever(int *socket_number) {
       // PART2 TASK: Implement forking
       /* YOUR CODE HERE */
 
-      if (/* YOUR CODE HERE */) {
+      if (fork() == 0) {
          // Kill child process if parent dies
          int r = prctl(PR_SET_PDEATHSIG, SIGTERM);
 
@@ -266,6 +266,8 @@ void serve_forever(int *socket_number) {
          }
 
          /* YOUR CODE HERE */
+	 dispatch(client_socket_number);
+	 exit(0);
       }
 #else
       dispatch(client_socket_number);
