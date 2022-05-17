@@ -53,9 +53,25 @@ long long int sum_simd(unsigned int vals[NUM_ELEMS]) {
 	
 	for(unsigned int w = 0; w < OUTER_ITERATIONS; w++) {
 		/* YOUR CODE GOES HERE */
+		__m128i tmp_sum = _mm_setzero_si128();
+		unsigned int results[4];
+		int i = 0;
+		for (; i + 4 <= NUM_ELEMS; i += 4) {
+		  __m128i tmp = _mm_loadu_si128((__m128i*) (vals + i));
+		  __m128i mask = _mm_cmpgt_epi32(tmp, _127);
+		  tmp = _mm_and_si128(mask, tmp);
+		  tmp_sum = _mm_add_epi32(tmp_sum, tmp);
+		}
+		_mm_storeu_si128((__m128i*)results, tmp_sum);
 
+		int j = 0;
+		for (; j < 4; ++j) {
+		  result += results[j];
+		}
 		/* You'll need a tail case. */
-
+		for (; i < NUM_ELEMS; ++i) {
+		  result += vals[i];
+		}
 	}
 	clock_t end = clock();
 	printf("Time taken: %Lf s\n", (long double)(end - start) / CLOCKS_PER_SEC);
